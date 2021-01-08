@@ -44,14 +44,14 @@ void doccambien()
 void QueoPhai() // cho bám trái
 {
 
-  analogWrite(ENB, 100); //110   // giá trị đo thực tế
-  analogWrite(ENA, 100);
+  analogWrite(ENB, 150); //110   // giá trị đo thực tế
+  analogWrite(ENA, 150);
   delay(100);
-  while (cambientruoc < 15)
+  while (cambientruoc < 20)
   {
     rephai();
     doccambien();
-    delay(100);
+    delay(30);
   }
 }
 void rephai()
@@ -105,7 +105,7 @@ void thuantrai()
 //}
 void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
 {
-  float Kp = 0.05, Kd = 2, Ki = 0.05; //float Kp = 15 , Kd =7 , Ki = 0.1;
+  float Kp =2.8 , Kd = 0.18, Ki = 0.5; //float Kp = 0.05 , Kd =2 , Ki = 0.5;
   float P, I, D;
   float lasterror;
   int out;
@@ -118,8 +118,8 @@ void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
   D = (Kd * (error - lasterror)) / SamplingTime;
   out = P + I + D;
   lasterror = error;
-  XungENB = 80 - out; // XungENA = 50 - out;
-  XungENA = 80 + out; // XungENB = 50 + out;
+  XungENB = 150 - out; // XungENA = 50 - out;
+  XungENA = 150 + out; // XungENB = 50 + out;
   
   if (cambientrai > 800)
   {
@@ -131,7 +131,7 @@ void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
     if (XungENB > 255)
       XungENB = 225;
     else if (XungENB < 0)
-      XungENB = 70;
+      XungENB = 80;
 
     if (XungENA > 255)
       XungENA = 225;
@@ -165,6 +165,6 @@ void loop()
 {
   BamTrai();
   doccambien();
-  if (cambientruoc < 15)
+  if (cambientruoc < 10)
     QueoPhai();
 }
