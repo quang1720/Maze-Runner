@@ -1,19 +1,17 @@
-
-
-#define ENA 10 
-#define ENB 11 
+#define ENA 10
+#define ENB 11
 #define in1 2
 #define in2 3
 #define in3 4
 #define in4 5
-const int trigL = A0;     // chân trig của HC-SR04 trái
-const int echoL = A1;     // chân echo của HC-SR04 trái
-const int trigC = A5;     // chân trig của HC-SR04 giữa
-const int echoC = A4;     // chân echo của HC-SR04 giữa
+const int trigL = A0; // chân trig của HC-SR04 trái
+const int echoL = A1; // chân echo của HC-SR04 trái
+const int trigC = A5; // chân trig của HC-SR04 giữa
+const int echoC = A4; // chân echo của HC-SR04 giữa
 float cambientrai;
-float cambientruoc; 
+float cambientruoc;
 //float cambienphai;
-float XungENB=0,XungENA=0;
+float XungENB = 0, XungENA = 0;
 float hamdoccambien(int trig, int echo)
 {
   unsigned long a;
@@ -34,8 +32,8 @@ void doccambien()
   //cambienphai=analogRead(A2);
   Serial.print("\n Trai : "); //70
   Serial.print(cambientrai);
-  Serial.print(" Truoc "); //50
-  Serial.print(cambientruoc);
+  //  Serial.print("\n Truoc "); //50
+  //  Serial.print(cambientruoc);
   //    Serial.print(" Phai "); //40
   //    Serial.println(cambienphai);
 }
@@ -44,14 +42,14 @@ void doccambien()
 void QueoPhai() // cho bám trái
 {
 
-  analogWrite(ENB, 100); //110   // giá trị đo thực tế
-  analogWrite(ENA, 100);
-  delay(100);
-  while (cambientruoc < 15)
+  analogWrite(ENB, 150); //110   // giá trị đo thực tế
+  analogWrite(ENA, 150);
+  //delay(100);
+  while (cambientruoc < 20)
   {
     rephai();
     doccambien();
-    delay(100);
+    delay(30);
   }
 }
 void rephai()
@@ -105,12 +103,12 @@ void thuantrai()
 //}
 void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
 {
-  float Kp = 0.05, Kd = 1, Ki = 0.05; //float Kp = 15 , Kd =7 , Ki = 0.1;
+  float Kp = 2.8, Kd = 0.18, Ki = 0.5; //float Kp = 0.05 , Kd =2 , Ki = 0.5;
   float P, I, D;
   float lasterror;
   int out;
-  float SamplingTime = 0.01;//0.05
-  float error = 13 - cambientrai;//13-cambientrai
+  float SamplingTime = 0.01;      //0.05
+  float error = 10 - cambientrai; //13-cambientrai
   thuantrai();
   thuanphai();
   P = error * Kp;
@@ -118,31 +116,32 @@ void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
   D = (Kd * (error - lasterror)) / SamplingTime;
   out = P + I + D;
   lasterror = error;
-  XungENB = 40 - out; // XungENA = 50 - out;
-  XungENA = 40 + out; // XungENB = 50 + out;
-  if (cambientrai > 1200)
+  XungENB = 200 - out; // XungENA = 50 - out;
+  XungENA = 200 + out; // XungENB = 50 + out;
+
+  if (cambientrai > 800)
   {
-    XungENA = 150;
+    XungENA = 200;
     XungENB = 0;
   }
   else
   {
     if (XungENB > 255)
-      XungENB = 150;
+      XungENB = 255;
     else if (XungENB < 0)
-      XungENB = 70;
+      XungENB = 0;
 
     if (XungENA > 255)
-      XungENA = 150;
+      XungENA = 255;
     else if (XungENA < 0)
-      XungENA = 45;
+      XungENA = 35;
   }
 
-  Serial.print("\nXungphai: ");
-  Serial.print(XungENA);
-  Serial.print("                        Xungtrai= ");
-  Serial.print(XungENB);
-  Serial.print("\n");
+  //  Serial.print("\nXungphai: ");
+  //  Serial.print(XungENA);
+  //  Serial.print("                        Xungtrai= ");
+  //  Serial.print(XungENB);
+  //  Serial.print("\n");
   analogWrite(ENB, XungENB); //100
   analogWrite(ENA, XungENA); //100
 }
@@ -164,6 +163,6 @@ void loop()
 {
   BamTrai();
   doccambien();
-  if (cambientruoc < 15)
+  if (cambientruoc < 14)
     QueoPhai();
 }

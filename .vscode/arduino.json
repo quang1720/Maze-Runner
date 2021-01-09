@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "port": "COM3",
-    "sketch": "Maze-Runner.ino"
+    "port": "/dev/ttyACM0",
+    "sketch": "Maze-Runner/Maze-Runner.ino"
 }
