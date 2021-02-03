@@ -42,14 +42,14 @@ void doccambien()
 void QueoPhai() // cho bám trái
 {
 
-  analogWrite(ENB, 150); //110   // giá trị đo thực tế
-  analogWrite(ENA, 150);
+  analogWrite(ENB, 180); //110   // giá trị đo thực tế
+  analogWrite(ENA, 180);
   //delay(100);
-  while (cambientruoc < 20)
+  while (cambientruoc < 15)//16
   {
     rephai();
     doccambien();
-    delay(30);
+    //delay(30);
   }
 }
 void rephai()
@@ -134,7 +134,7 @@ void BamTrai() // bám trái là trái trừ, phải cộng (XungENB,XungENA)
     if (XungENA > 255)
       XungENA = 255;
     else if (XungENA < 0)
-      XungENA = 35;
+      XungENA = 35;//35
   }
 
   //  Serial.print("\nXungphai: ");
@@ -163,6 +163,6 @@ void loop()
 {
   BamTrai();
   doccambien();
-  if (cambientruoc < 14)
+  if (cambientruoc < 10)
     QueoPhai();
 }
